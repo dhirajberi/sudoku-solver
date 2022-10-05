@@ -1,5 +1,6 @@
 - We are going to create web app to solve any sudoku (easy to hard level)
-![Sudoku](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Sudoku_Puzzle_by_L2G-20050714_standardized_layout.svg/1200px-Sudoku_Puzzle_by_L2G-20050714_standardized_layout.svg.png)
+<img width="338" alt="image" src="https://user-images.githubusercontent.com/46566839/194050368-84c97c35-c807-4f9d-864b-a0885a125db1.png">
+
 
 ## Getting started
 * Register yourself in the [Hacktoberfest](https://hacktoberfest.com/) 2022 
