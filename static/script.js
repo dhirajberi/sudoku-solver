@@ -187,7 +187,7 @@ Sudoku.prototype.drawBoard = function(){
     var sudoku_board = $('<div></div>').addClass('sudoku_board');
     var sudoku_statistics = $('<div></div>')
                                 .addClass('statistics')
-    .html('<b>Cells:</b> <span class="cells_complete">'+ this.cellsComplete +'/'+this.cellsNr +'</span> | <button type="button" onclick="solveMain()">Solve</button> | <button type="button" onclick="resetMain()">Reset</button>');
+    .html('<b>Cells:</b> <span class="cells_complete">'+ this.cellsComplete +'/'+this.cellsNr +'</span> | <button type="button" onclick="solveMain()">Solve</button>| <button type="button" onclick="resetMain()">Reset</button>');
     
     $('#'+ this.id).empty();
     
@@ -359,9 +359,11 @@ Sudoku.prototype.cellSelect = function(cell){
     
     //highlight select cells
     if (this.highlight > 0) {        
-        horizontal_cells.addClass('selected');
-        vertical_cells.addClass('selected');
-        group_cells.addClass('selected group');
+        if(!$('.cell').hasClass('solved')) {
+            horizontal_cells.addClass('selected');
+            vertical_cells.addClass('selected');
+            group_cells.addClass('selected group');
+        }
         same_value_cells.not( $(cell).find('span') ).addClass('samevalue');
     }
     
@@ -369,9 +371,11 @@ Sudoku.prototype.cellSelect = function(cell){
         $('#'+ this.id +' .board_console .num').addClass('no');
     } else {
         $('#'+ this.id +' .board_console .num').removeClass('no');
-        
-        this.showConsole();
-        this.resizeWindow();
+
+        if(!$('.cell').hasClass('solved')) {
+            this.showConsole();
+            this.resizeWindow();
+        }
     }    
 };
 
@@ -567,3 +571,97 @@ $(function() {
 
     console.log("loading time");
 });
+
+/* solver */
+
+const _API_BASE_URL = 'https://sudoku-solver-pro.herokuapp.com'
+
+function solveMain() {
+    const TOTAL_CELLS = 81;
+    const EMPTY_CELLS = $('.cell span:empty').length;
+    const FILLED_CELLS = TOTAL_CELLS - EMPTY_CELLS;
+
+    if($('.cell').hasClass('solved')) {
+        alert('Already solved! Please reset/reload page to solve new one.');
+        return;
+    }
+
+    if(FILLED_CELLS < 10) {
+        alert('Please enter more than 10 values!');
+        return;
+    }
+    
+    if(FILLED_CELLS > 70) {
+        alert('Please enter less than 70 values!');
+        return;
+    }
+
+    const isInValid = $('.cell').hasClass('notvalid'); 
+
+    if(isInValid) {
+        alert('Please enter valid values!');
+        return;
+    }
+
+    let inputValues = [];
+    let arr = [];
+
+    for(let x=1; x<=9; x++) {
+        arr = [];
+        for(let y=1; y<=9; y++) {
+            let val = $(`.cell[x='${x}'][y='${y}'] span`).html();
+
+            if(val === '') {
+                arr.push('.');
+            } else {
+                $(`.cell[x='${x}'][y='${y}']`).addClass('fix');
+                arr.push(val);
+            }
+        }
+        inputValues.push(arr);
+    }
+
+    console.log(inputValues);
+
+    $('.loading').show();
+
+    $.ajax({
+        method: 'POST',
+        url: `${_API_BASE_URL}/solve`,
+        data: JSON.stringify({
+            board: inputValues
+        }),
+        contentType: "application/json",
+        success: function (result, status, xhr) {
+            let res = xhr.responseJSON?.solution;
+
+            $('.loading').hide();
+
+            if(res) {
+                for(let x=1; x<=9; x++) {
+                    for(let y=1; y<=9; y++) {
+                        $(`.cell[x='${x}'][y='${y}'] span`).html(res[x-1][y-1]);
+                    }
+                }
+                $('.cell').addClass('solved').removeClass('selected group current');
+            } else {
+                alert('Something went wrong!');
+            }
+        },
+        error: function (xhr, status, error) {
+            $('.loading').hide();
+
+            console.log(xhr);
+            alert('Something went wrong!');
+        },
+    });
+}
+
+function resetMain() {
+    $('.cell span').html('');
+    $('.cell').removeClass('selected group current fix notvalid solved');
+    window.location.reload();
+}
+
+// hide logs
+console.log = () => {};
