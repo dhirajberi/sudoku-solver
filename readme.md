@@ -22,3 +22,10 @@ git push origin branch-name
 * Create a new pull request from your forked repository (Click the `New Pull Request` button located at the top of your repo)
 * Wait for your PR review and merge approval!
 * __Star this repository__ if you had fun!
+
+## 👩‍💻👨‍💻 Our valuable Contributors
+
+<p align="center">
+<a href="https://github.com/dhirajberi/sudoku-solver/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=dhirajberi/sudoku-solver" />
+</a></p>
