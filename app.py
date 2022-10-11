@@ -120,5 +120,10 @@ def isSafe(board, row, col, number):
     
     return True
 
+# image input
+@app.route("/image-input", methods=['POST'])
+def imageInput():
+    pass
+
 if __name__ == "__main__":
     app.run(debug=True)
