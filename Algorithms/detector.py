@@ -1,5 +1,3 @@
-# DataFlair Sudoku solver
-
 import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
@@ -9,10 +7,9 @@ import ast
 
 classes = np.arange(0, 10)
 
-model = load_model('model-OCR.h5')
+model = load_model('/Users/yudiz/Documents/sudoku-solver/model/model-OCR.h5')
 # print(model.summary())
 input_size = 48
-
 
 def get_perspective(img, location, height = 900, width = 900):
     """Takes an image and location os interested region.
@@ -34,10 +31,6 @@ def get_InvPerspective(img, masked_num, location, height = 900, width = 900):
     matrix = cv2.getPerspectiveTransform(pts1, pts2)
     result = cv2.warpPerspective(masked_num, matrix, (img.shape[1], img.shape[0]))
     return result
-
-
-
-
 
 def find_board(img):
     """Takes an image as input and finds a sudoku board inside of the image"""
@@ -93,8 +86,7 @@ def displayNumbers(img, numbers, color=(0, 255, 0)):
 
 # Read image
 
-img = cv2.imread('sudoku_s1.png') #replace Image
-
+img = cv2.imread('sudoku.jpeg') #replace Image
 
 # extract board from input image
 board, location = find_board(img)
@@ -120,14 +112,12 @@ for i in prediction:
 
 board_num = np.array(predicted_numbers).astype('U').reshape(9, 9)
 
-
 res = board_num.tolist()
-# print(res)
 
-json_str = json.dumps(res)
+for r in range(len(res)):
+    for c in range(len(res)):
+        if res[r][c] == "0":
+            res[r][c] = "."
 
-
-res_dict = {}
-res_dict["board"] = ast.literal_eval(json_str)
-
-print(res_dict)
+ans = {"board": res}
+print(ans)
