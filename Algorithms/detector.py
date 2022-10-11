@@ -2,13 +2,10 @@ import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
 import imutils
-import json
-import ast
 
 classes = np.arange(0, 10)
 
-model = load_model('/Users/yudiz/Documents/sudoku-solver/model/model-OCR.h5')
-# print(model.summary())
+model = load_model('../model/model-OCR.h5')
 input_size = 48
 
 def get_perspective(img, location, height = 900, width = 900):
