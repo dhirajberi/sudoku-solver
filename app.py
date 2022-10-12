@@ -6,9 +6,14 @@ import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
 import imutils
+import os
 
 app = Flask(__name__)
 CORS(app)
+
+basedir = os.path.abspath(os.path.dirname(__name__))
+UPLOAD_FILE = f"{basedir}/media"
+app.config['UPLOAD_FILE'] = UPLOAD_FILE
 
 @app.route("/")
 def home():
@@ -132,7 +137,9 @@ def imageInput():
     model = load_model('model/model-OCR.h5')
     input_size = 48
 
-    image = request.files['image']
+    # image save in media
+    file = request.files['image']
+    file.save(os.path.join(app.config['UPLOAD_FILE'], file.filename))
 
     def get_perspective(img, location, height = 900, width = 900):
         """Takes an image and location os interested region.
@@ -208,8 +215,7 @@ def imageInput():
         return img
 
     # Read image
-
-    img = cv2.imread(image) #replace Image
+    img = cv2.imread(f"{UPLOAD_FILE}/{file.filename}") #replace Image
 
     # extract board from input image
     board, location = find_board(img)
@@ -242,7 +248,10 @@ def imageInput():
             if res[r][c] == "0":
                 res[r][c] = "."
 
-    return jsonify({"board": res})    
+    # remove image from media
+    os.remove(os.path.join(app.config['UPLOAD_FILE'], file.filename))
+
+    return jsonify({"board": res})
 
 if __name__ == "__main__":
     app.run(debug=True)
