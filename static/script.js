@@ -663,5 +663,10 @@ function resetMain() {
     window.location.reload();
 }
 
+console.info(
+    'Made with %c♥%c \n\nhttps://github.com/dhirajberi/sudoku-solver',
+    'color: #e25555', 'color: unset'
+);
+
 // hide logs
 console.log = () => { };
