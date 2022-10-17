@@ -456,3 +456,13 @@ body {
     font-family: "Monoton", sans-serif;
     font-weight: lighter;
   }
+
+  #footer {
+    margin-top: 50px;
+    color: white;
+    text-align: center;
+    padding: 10px 0 10px 0;
+    width: 100%;
+    background-color: black;
+    font-family: "Sofia", sans-serif;
+  }
