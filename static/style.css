@@ -451,3 +451,8 @@ body {
       transform: rotate(360deg);
     }
   }
+
+  #sudoku_title {
+    font-family: "Monoton", sans-serif;
+    font-weight: lighter;
+  }
